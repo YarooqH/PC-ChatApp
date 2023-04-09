@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO Chat</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      /* #messages {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow: auto;
+        height: 300px;
+      } */
+      /* #input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+      } */
+      #form {
+        display: flex;
+      }
+      #form button {
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+      }
+
+      .user {
+        color: green;
+      }
+
+      .server {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const form = document.querySelector('#form');
+      const input = document.querySelector('#input');
+      const messages = document.querySelector('#messages');
+      const socket = io();
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log("heelo", input.value)
+        if (input.value) {
+          socket.emit('message', input.value);
+
+          const li = document.createElement('li');
+
+          li.textContent = input.value;
+          li.classList.add('user')
+          messages.appendChild(li);
+
+          input.value = '';
+        }
+
+
+      });
+
+      socket.on('message', (msg) => {
+        const li = document.createElement('li');
+        li.textContent = msg;
+        li.classList.add('server')
+        messages.appendChild(li);
+      });
+
+    </script>
+  </body>
+</html>
